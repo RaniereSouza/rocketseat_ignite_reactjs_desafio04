@@ -1,21 +1,37 @@
-import { Component } from 'react';
+import { Component }        from 'react';
 import { FiEdit3, FiTrash } from 'react-icons/fi';
 
-import { Container } from './styles';
-import api from '../../services/api';
+import { TFood } from '../../@types/Food';
 
-class Food extends Component {
-  constructor(props) {
+import { api } from '../../services/api';
+
+import { Container } from './styles';
+
+interface FoodProps {
+  food:           TFood;
+  handleEditFood: (food: TFood) => void;
+  handleDelete:   (id: number) => Promise<void>;
+}
+
+interface FoodState {
+  isAvailable: boolean;
+}
+
+export class Food extends Component<FoodProps, FoodState> {
+  constructor(props: FoodProps) {
     super(props);
 
     const { available } = this.props.food;
     this.state = {
       isAvailable: available
     };
+
+    this.toggleAvailable = this.toggleAvailable.bind(this);
+    this.setEditingFood  = this.setEditingFood.bind(this);
   }
 
   toggleAvailable = async () => {
-    const { food } = this.props;
+    const { food }        = this.props;
     const { isAvailable } = this.state;
 
     await api.put(`/foods/${food.id}`, {
@@ -33,7 +49,7 @@ class Food extends Component {
   }
 
   render() {
-    const { isAvailable } = this.state;
+    const { isAvailable }        = this.state;
     const { food, handleDelete } = this.props;
 
     return (
@@ -41,6 +57,7 @@ class Food extends Component {
         <header>
           <img src={food.image} alt={food.name} />
         </header>
+
         <section className="body">
           <h2>{food.name}</h2>
           <p>{food.description}</p>
@@ -48,6 +65,7 @@ class Food extends Component {
             R$ <b>{food.price}</b>
           </p>
         </section>
+
         <section className="footer">
           <div className="icon-container">
             <button
@@ -88,5 +106,3 @@ class Food extends Component {
     );
   }
 };
-
-export default Food;
