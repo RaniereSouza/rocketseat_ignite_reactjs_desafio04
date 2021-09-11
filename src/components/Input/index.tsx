@@ -4,7 +4,6 @@ import  {
           useState,
           useCallback,
           InputHTMLAttributes,
-          RefObject,
         }            from 'react';
 import  { IconType } from 'react-icons';
 
@@ -18,7 +17,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = ({ name, icon:Icon, ...rest }: InputProps) => {
-  const inputRef: RefObject<HTMLInputElement> = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const [isFocused, setIsFocused] = useState(false);
   const [isFilled, setIsFilled]   = useState(false);

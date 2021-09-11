@@ -1,5 +1,6 @@
-import { Component, createRef, RefObject } from 'react';
-import { FiCheckSquare }                   from 'react-icons/fi';
+// import { Component, createRef, RefObject } from 'react';
+import { createRef }     from 'react';
+import { FiCheckSquare } from 'react-icons/fi';
 
 import { FormHandles } from '@unform/core';
 
@@ -13,10 +14,10 @@ import { Form } from './styles';
 interface ModalAddFoodProps {
   isOpen:        boolean;
   setIsOpen:     () => void;
-  handleAddFood: (food: TFood) => Promise<void>;
+  handleAddFood: (food: Omit<TFood, 'id' | 'available'>) => Promise<void>;
 }
 
-export class ModalAddFood extends Component<ModalAddFoodProps> {
+/* export class OldModalAddFood extends Component<ModalAddFoodProps> {
   formRef: RefObject<FormHandles>;
 
   constructor(props: ModalAddFoodProps) {
@@ -57,4 +58,33 @@ export class ModalAddFood extends Component<ModalAddFoodProps> {
       </Modal>
     );
   }
+}; */
+
+export const ModalAddFood = ({ isOpen, setIsOpen, handleAddFood }: Readonly<ModalAddFoodProps>) => {
+  const formRef = createRef<FormHandles>();
+
+  const handleSubmit = async (data: Omit<TFood, 'id' | 'available'>) => {
+    await handleAddFood(data);
+    setIsOpen();
+  };
+
+  return (
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen}>
+      <Form ref={formRef} onSubmit={handleSubmit}>
+        <h1>Novo Prato</h1>
+
+        <Input name="image"       placeholder="Cole o link aqui" />
+        <Input name="name"        placeholder="Ex: Moda Italiana" />
+        <Input name="price"       placeholder="Ex: 19.90" />
+        <Input name="description" placeholder="Descrição" />
+
+        <button type="submit" data-testid="add-food-button">
+          <p className="text">Adicionar Prato</p>
+          <div className="icon">
+            <FiCheckSquare size={24} />
+          </div>
+        </button>
+      </Form>
+    </Modal>
+  );
 };

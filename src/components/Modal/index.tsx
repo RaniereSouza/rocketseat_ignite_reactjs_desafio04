@@ -1,5 +1,6 @@
-import { Component } from 'react';
-import ReactModal    from 'react-modal';
+// import { Component } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
+import ReactModal                         from 'react-modal';
 
 interface ModalProps {
   isOpen:    boolean;
@@ -10,7 +11,7 @@ interface ModalState {
   modalStatus: boolean;
 }
 
-export class Modal extends Component<ModalProps, ModalState> {
+/* export class OldModal extends Component<ModalProps, ModalState> {
   constructor(props: ModalProps) {
     super(props);
 
@@ -62,4 +63,43 @@ export class Modal extends Component<ModalProps, ModalState> {
       </ReactModal>
     );
   }
+}; */
+
+export const Modal = ({ isOpen, setIsOpen, children }: Readonly<ModalProps & {children?: ReactNode;}>) => {
+  const [state, setState] = useState<ModalState>({
+                              modalStatus: isOpen
+                            });
+
+  useEffect(() => {
+    setState(state => ({...state, modalStatus: isOpen}));
+  }, [isOpen]);
+  
+  return (
+    <ReactModal
+      shouldCloseOnOverlayClick={!false}
+      onRequestClose={setIsOpen}
+      isOpen={state.modalStatus}
+      ariaHideApp={false}
+      style={{
+        content: {
+          top: '50%',
+          left: '50%',
+          right: 'auto',
+          bottom: 'auto',
+          marginRight: '-50%',
+          transform: 'translate(-50%, -50%)',
+          background: '#F0F0F5',
+          color: '#000000',
+          borderRadius: '8px',
+          width: '736px',
+          border: 'none',
+        },
+        overlay: {
+          backgroundColor: '#121214e6',
+        },
+      }}
+    >
+      {children}
+    </ReactModal>
+  );
 };
