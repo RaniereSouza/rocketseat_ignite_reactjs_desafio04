@@ -14,9 +14,9 @@ interface FoodProps {
   handleDelete:   (id: number) => Promise<void>;
 }
 
-interface FoodState {
+/* interface FoodState {
   isAvailable: boolean;
-}
+} */
 
 /* export class OldFood extends Component<FoodProps, FoodState> {
   constructor(props: FoodProps) {
@@ -109,19 +109,15 @@ interface FoodState {
 }; */
 
 export const Food = ({ food, handleEditFood, handleDelete }: FoodProps) => {
-  const [ state, setState ] = useState<FoodState>({
-                                isAvailable: food.available
-                              });
+  const [ isAvailable, setIsAvailable ] = useState(food.available);
 
   const toggleAvailable = async () => {
-    const { isAvailable } = state;
-
     await api.put(`/foods/${food.id}`, {
       ...food,
       available: !isAvailable,
     });
 
-    setState({...state, isAvailable: !isAvailable});
+    setIsAvailable(!isAvailable);
   };
 
   const setEditingFood = () => {
@@ -129,7 +125,7 @@ export const Food = ({ food, handleEditFood, handleDelete }: FoodProps) => {
   };
 
   return (
-    <Container available={state.isAvailable}>
+    <Container available={isAvailable}>
       <header>
         <img src={food.image} alt={food.name} />
       </header>
@@ -164,13 +160,13 @@ export const Food = ({ food, handleEditFood, handleDelete }: FoodProps) => {
         </div>
 
         <div className="availability-container">
-          <p>{state.isAvailable ? 'Disponível' : 'Indisponível'}</p>
+          <p>{isAvailable ? 'Disponível' : 'Indisponível'}</p>
 
           <label htmlFor={`available-switch-${food.id}`} className="switch">
             <input
               id={`available-switch-${food.id}`}
               type="checkbox"
-              checked={state.isAvailable}
+              checked={isAvailable}
               onChange={toggleAvailable}
               data-testid={`change-status-food-${food.id}`}
             />

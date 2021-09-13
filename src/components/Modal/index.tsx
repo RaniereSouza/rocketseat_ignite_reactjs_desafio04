@@ -7,9 +7,9 @@ interface ModalProps {
   setIsOpen: () => void;
 }
 
-interface ModalState {
+/* interface ModalState {
   modalStatus: boolean;
-}
+} */
 
 /* export class OldModal extends Component<ModalProps, ModalState> {
   constructor(props: ModalProps) {
@@ -66,19 +66,17 @@ interface ModalState {
 }; */
 
 export const Modal = ({ isOpen, setIsOpen, children }: Readonly<ModalProps & {children?: ReactNode;}>) => {
-  const [state, setState] = useState<ModalState>({
-                              modalStatus: isOpen
-                            });
+  const [ modalStatus, setModalStatus ] = useState(isOpen);
 
   useEffect(() => {
-    setState(state => ({...state, modalStatus: isOpen}));
+    setModalStatus(isOpen);
   }, [isOpen]);
   
   return (
     <ReactModal
       shouldCloseOnOverlayClick={!false}
       onRequestClose={setIsOpen}
-      isOpen={state.modalStatus}
+      isOpen={modalStatus}
       ariaHideApp={false}
       style={{
         content: {
